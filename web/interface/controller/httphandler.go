@@ -1,17 +1,25 @@
-package httphandler
+package controller
 
 import (
 	"fmt"
 	"net/http"
 
-	hello "github.com/pepese/golang-CleanArchitecture/web/usecase"
+	"github.com/pepese/golang-CleanArchitecture/web/usecase"
 )
 
 func NewMux() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+		uc := usecase.NewHelloUC("Go")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, hello.Exec())
+		fmt.Fprintf(w, uc.Say())
 	})
+	/*
+		mux.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+			h := usecase.NewUser("Go")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintf(w, h.Get())
+		})
+	*/
 	return mux
 }

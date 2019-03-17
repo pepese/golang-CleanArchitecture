@@ -1,14 +1,24 @@
-package httpserver
+package server
 
 import (
 	"net/http"
 
-	httphandler "github.com/pepese/golang-CleanArchitecture/web/interface/controller"
+	"github.com/pepese/golang-CleanArchitecture/web/interface/controller"
 	"github.com/spf13/cobra"
 )
 
-func Run(cmd *cobra.Command, args []string) {
-	mux := httphandler.NewMux()
+type HttpServer interface {
+	Run(cmd *cobra.Command, args []string)
+}
+
+type httpServer struct{}
+
+func (hs *httpServer) Run(cmd *cobra.Command, args []string) {
+	mux := controller.NewMux()
 	srv := &http.Server{Addr: ":8080", Handler: mux}
 	srv.ListenAndServe()
+}
+
+func NewHttpServer() *httpServer {
+	return &httpServer{}
 }

@@ -15,9 +15,11 @@
 package cmd
 
 import (
-	httpserver "github.com/pepese/golang-CleanArchitecture/web/infrastructure/server"
+	"github.com/pepese/golang-CleanArchitecture/web/infrastructure/server"
 	"github.com/spf13/cobra"
 )
+
+var httpserver = server.NewHttpServer()
 
 // httpserverCmd represents the httpserver command
 var httpserverCmd = &cobra.Command{
