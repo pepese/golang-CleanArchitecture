@@ -10,31 +10,41 @@ Add commands to it by running `cobra add [cmdname]`.
 ```
 
 cobra コマンド利用の都合で `web` 階層設けたが本当はいらぬ。  
-以下の階層を作る。
-
-```
-web/
-├── LICENSE
-├── cmd/
-│   └── root.go
-├── domain/
-├── infrastructure/
-│   ├── datastore/
-│   └── server/
-│       └── httpserver.go
-├── interface/
-│   ├── controller/
-│   └── presenter/
-├── main.go
-├── registry/
-└── usecase/
-```
-
 コマンド作る。
 
 ```bash
 $ cobra add httpserver
 ```
+
+以下の階層を作る。
+
+```
+web/
+├── LICENSE
+├── cmd
+│   ├── httpserver.go
+│   └── root.go
+├── domain
+│   ├── helloLogic.go
+│   └── model
+│       └── hello.go
+├── infrastructure
+│   ├── datastore
+│   │   └── helloDS.go
+│   └── server
+│       └── httpserver.go
+├── interface
+│   ├── controller
+│   │   └── httphandler.go
+│   └── presenter
+│       └── helloRepository.go
+├── main.go
+├── registry
+└── usecase
+    └── helloUC.go
+```
+
+実行する。
 
 ```bash
 $ cd web
@@ -43,3 +53,18 @@ $ ./web httpserver
 $ curl localhost:8080
 Hello Go!
 ```
+
+- [Go 1.11 Modules](https://qiita.com/sky0621/items/9af758c7df5403caa991)
+
+```bash
+$ go version
+go version go1.11.5 darwin/amd64
+$ export GO111MODULE=on
+$ go mod init
+$ go build
+```
+
+- `GO111MODULE`
+    - `on` ： 常に module-aware mode で動作する
+    - `off` ： 常に GOPATH mode で動作する
+    - `auto` ： `$GOPATH` 配下では  GOPATH modeで，それ以外のディレクトリでは module-aware mode で動作する
