@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pepese/golang-CleanArchitecture/web/usecase"
+	"github.com/pepese/golang-CleanArchitecture/usecase"
 )
 
 func NewGinRouter() *gin.Engine {

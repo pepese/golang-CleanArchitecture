@@ -1,6 +1,6 @@
 package datastore
 
-import "github.com/pepese/golang-CleanArchitecture/web/domain/model"
+import "github.com/pepese/golang-CleanArchitecture/domain/model"
 
 type helloRepository struct{}
 

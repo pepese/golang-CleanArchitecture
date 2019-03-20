@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/pepese/golang-CleanArchitecture/web/usecase"
+	"github.com/pepese/golang-CleanArchitecture/usecase"
 )
 
 /*

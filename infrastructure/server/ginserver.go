@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/web/interface/controller"
+	"github.com/pepese/golang-CleanArchitecture/interface/controller"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +11,7 @@ type GinServer interface {
 
 type ginServer struct{}
 
-func (hs *ginServer) Run(cmd *cobra.Command, args []string) {
+func (hs *ginServer) Run() {
 	router := controller.NewGinRouter()
 	RunWithGracefulStop(router)
 }

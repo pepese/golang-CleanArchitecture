@@ -15,15 +15,15 @@
 package cmd
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/web/infrastructure/server"
+	"github.com/pepese/golang-CleanArchitecture/infrastructure/server"
 	"github.com/spf13/cobra"
 )
 
-var ginserver = server.NewGinServer()
+var t string
 
-// ginserverCmd represents the ginserver command
-var ginserverCmd = &cobra.Command{
-	Use:   "ginserver",
+// serverCmd represents the server command
+var serverCmd = &cobra.Command{
+	Use:   "server",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -31,19 +31,31 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: ginserver.Run,
+	Run: runServer,
 }
 
 func init() {
-	rootCmd.AddCommand(ginserverCmd)
+	rootCmd.AddCommand(serverCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// ginserverCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// ginserverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serverCmd.Flags().StringVar(&t, "type", "http", "")
+}
+
+func runServer(cmd *cobra.Command, args []string) {
+	if t == "http" {
+		srv := server.NewHttpServer()
+		srv.Run()
+	} else if t == "gin" {
+		srv := server.NewGinServer()
+		srv.Run()
+	} else {
+	}
 }

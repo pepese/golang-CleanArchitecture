@@ -1,15 +1,13 @@
 ```bash
 $ pwd # プロジェクトルートであることを確認
-$ mkdir web
-$ cobra init $(pwd)/web
+$ cobra init $(pwd)
 Your Cobra application is ready at
-/Users/tanakakns/go/src/github.com/pepese/golang-CleanArchitecture/web
+/Users/tanakakns/go/src/github.com/pepese/golang-CleanArchitecture
 
 Give it a try by going there and running `go run main.go`.
 Add commands to it by running `cobra add [cmdname]`.
 ```
 
-cobra コマンド利用の都合で `web` 階層設けたが本当はいらぬ。  
 コマンド作る。
 
 ```bash
@@ -62,7 +60,8 @@ $ go version
 go version go1.11.5 darwin/amd64
 $ export GO111MODULE=on
 $ go mod init
-$ go build
+$ go build -o app
+$ ./app httpserver
 ```
 
 - `GO111MODULE`
@@ -77,5 +76,6 @@ $ go version
 go version go1.11.5 darwin/amd64
 $ export GO111MODULE=on
 $ go mod download
-$ go build
+$ go build -o app
+$ ./app httpserver
 ```

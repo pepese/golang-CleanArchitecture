@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/web/domain/model"
-	"github.com/pepese/golang-CleanArchitecture/web/infrastructure/datastore"
+	"github.com/pepese/golang-CleanArchitecture/domain/model"
+	"github.com/pepese/golang-CleanArchitecture/infrastructure/datastore"
 )
 
 /*

@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/web/domain"
-	"github.com/pepese/golang-CleanArchitecture/web/domain/model"
+	"github.com/pepese/golang-CleanArchitecture/domain"
+	"github.com/pepese/golang-CleanArchitecture/domain/model"
 )
 
 /*

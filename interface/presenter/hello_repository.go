@@ -1,7 +1,7 @@
 package presenter
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/web/domain/model"
+	"github.com/pepese/golang-CleanArchitecture/domain/model"
 )
 
 type HelloRepository interface {

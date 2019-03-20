@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/pepese/golang-CleanArchitecture/web/cmd"
+import "github.com/pepese/golang-CleanArchitecture/cmd"
 
 func main() {
 	cmd.Execute()
