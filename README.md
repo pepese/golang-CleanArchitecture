@@ -69,3 +69,13 @@ $ go build
     - `on` ： 常に module-aware mode で動作する
     - `off` ： 常に GOPATH mode で動作する
     - `auto` ： `$GOPATH` 配下では  GOPATH modeで，それ以外のディレクトリでは module-aware mode で動作する
+- importするリポジトリのソースコードは `$GOPATH/pkg/mod` にバージョンを固定してDLされる
+
+```bash
+$ git clone
+$ go version
+go version go1.11.5 darwin/amd64
+$ export GO111MODULE=on
+$ go mod download
+$ go build
+```
