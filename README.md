@@ -17,29 +17,36 @@ $ cobra add httpserver
 以下の階層を作る。
 
 ```
-web/
+.
 ├── LICENSE
+├── README.md
 ├── cmd
-│   ├── httpserver.go
-│   └── root.go
+│   ├── root.go
+│   └── server.go
 ├── domain
-│   ├── helloLogic.go
+│   ├── hello_logic.go
 │   └── model
 │       └── hello.go
+├── go.mod
+├── go.sum
 ├── infrastructure
 │   ├── datastore
-│   │   └── helloDS.go
+│   │   └── hello_datastore.go
 │   └── server
-│       └── httpserver.go
+│       ├── ginserver.go
+│       ├── httpserver.go
+│       └── util.go
 ├── interface
 │   ├── controller
-│   │   └── httphandler.go
+│   │   ├── gin_router.go
+│   │   └── http_router.go
 │   └── presenter
-│       └── helloRepository.go
+│       └── hello_repository.go
 ├── main.go
-├── registry
-└── usecase
-    └── helloUC.go
+├── usecase
+│   └── hello_usecase.go
+└── web
+    └── registry
 ```
 
 実行する。
