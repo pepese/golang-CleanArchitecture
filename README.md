@@ -54,6 +54,7 @@ $ curl localhost:8080
 Hello Go!
 ```
 
+- [Go 1.11 Modules](https://github.com/golang/go/wiki/Modules)
 - [Go 1.11 Modules](https://qiita.com/sky0621/items/9af758c7df5403caa991)
 
 ```bash
