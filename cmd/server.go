@@ -46,7 +46,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	serverCmd.Flags().StringVar(&t, "type", "http", "")
+	serverCmd.Flags().StringVarP(&t, "type", "t", "http", "")
 }
 
 func runServer(cmd *cobra.Command, args []string) {

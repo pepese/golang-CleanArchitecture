@@ -84,5 +84,6 @@ go version go1.11.5 darwin/amd64
 $ export GO111MODULE=on
 $ go mod download
 $ go build -o app
-$ ./app httpserver
+$ ./app server
+$ ./app server --type gin
 ```
