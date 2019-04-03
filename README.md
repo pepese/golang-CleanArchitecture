@@ -11,7 +11,7 @@ Add commands to it by running `cobra add [cmdname]`.
 コマンド作る。
 
 ```bash
-$ cobra add httpserver
+$ cobra add server
 ```
 
 以下の階層を作る。
@@ -52,9 +52,8 @@ $ cobra add httpserver
 実行する。
 
 ```bash
-$ cd web
-$ go build
-$ ./web httpserver
+$ go build -o app
+$ ./app server
 $ curl localhost:8080
 Hello Go!
 ```
@@ -68,12 +67,12 @@ go version go1.11.5 darwin/amd64
 $ export GO111MODULE=on
 $ go mod init
 $ go build -o app
-$ ./app httpserver
+$ ./app server
 ```
 
 - `GO111MODULE`
-    - `on` ： 常に module-aware mode で動作する
-    - `off` ： 常に GOPATH mode で動作する
+    - `on` ： GOPATH mode で動作する
+    - `off` ： module-aware mode で動作する
     - `auto` ： `$GOPATH` 配下では  GOPATH modeで，それ以外のディレクトリでは module-aware mode で動作する
 - importするリポジトリのソースコードは `$GOPATH/pkg/mod` にバージョンを固定してDLされる
 
@@ -82,8 +81,8 @@ $ git clone
 $ go version
 go version go1.11.5 darwin/amd64
 $ export GO111MODULE=on
-$ go mod download
-$ go build -o app
+$ go mod download # GO111MODULE=on go mod download
+$ go build -o app # GO111MODULE=on go build -o app
 $ ./app server
-$ ./app server --type gin
+$ ./app server --type gin # ./app server -t gin
 ```
