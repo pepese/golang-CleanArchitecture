@@ -80,7 +80,7 @@ $ ./app server
 $ git clone
 $ go version
 go version go1.11.5 darwin/amd64
-$ export GO111MODULE=on
+$ export GO111MODULE=on # $GOPATH/src 配下の場合
 $ go mod download # GO111MODULE=on go mod download
 $ go build -o app # GO111MODULE=on go build -o app
 $ ./app server
