@@ -1,3 +1,6 @@
+<img src="https://paulovich.net/img/CleanArchitecture-Uncle-Bob.jpg" />
+<img src="https://paulovich.net/img/Flow-Of-Control.png" />
+
 ```bash
 $ pwd # プロジェクトルートであることを確認
 $ cobra init $(pwd)
