@@ -10,3 +10,5 @@ require (
 	github.com/spf13/viper v1.3.2
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 )
+
+go 1.13

@@ -1,11 +1,33 @@
+# golang-CleanArchitecture
+
+Go 言語でクリーアーキテクチャを実現する場合の構成を作ってみる。
+
 <img src="https://paulovich.net/img/CleanArchitecture-Uncle-Bob.jpg" />
 <img src="https://paulovich.net/img/Flow-Of-Control.png" />
 
-```bash
-$ pwd # プロジェクトルートであることを確認
-$ cobra init $(pwd)
+## 実行
+
+```zsh
+% git clone
+% go version
+go version go1.13.3 darwin/amd64
+% export GO111MODULE=on
+% go mod download
+% go build -o app
+% ./app server
+% ./app server --type gin # ./app server -t gin
+```
+
+## 実装メモ
+
+```zsh
+% pwd # プロジェクトルートであることを確認
+% export GO111MODULE=on
+% go mod init
+% go get -u github.com/spf13/cobra/cobra
+% cobra init $(pwd)
 Your Cobra application is ready at
-/Users/tanakakns/go/src/github.com/pepese/golang-CleanArchitecture
+$HOME/go/src/github.com/pepese/golang-CleanArchitecture
 
 Give it a try by going there and running `go run main.go`.
 Add commands to it by running `cobra add [cmdname]`.
@@ -13,13 +35,13 @@ Add commands to it by running `cobra add [cmdname]`.
 
 コマンド作る。
 
-```bash
-$ cobra add server
+```zsh
+% cobra add server
 ```
 
 以下の階層を作る。
 
-```
+```zsh
 .
 ├── LICENSE
 ├── README.md
@@ -54,38 +76,9 @@ $ cobra add server
 
 実行する。
 
-```bash
-$ go build -o app
-$ ./app server
-$ curl localhost:8080
+```zsh
+% go build -o app
+% ./app server # ./app server -t gin
+% curl localhost:8080
 Hello Go!
-```
-
-- [Go 1.11 Modules](https://github.com/golang/go/wiki/Modules)
-- [Go 1.11 Modules](https://qiita.com/sky0621/items/9af758c7df5403caa991)
-
-```bash
-$ go version
-go version go1.11.5 darwin/amd64
-$ export GO111MODULE=on
-$ go mod init
-$ go build -o app
-$ ./app server
-```
-
-- `GO111MODULE`
-    - `on` ： GOPATH mode で動作する
-    - `off` ： module-aware mode で動作する
-    - `auto` ： `$GOPATH` 配下では  GOPATH modeで，それ以外のディレクトリでは module-aware mode で動作する
-- importするリポジトリのソースコードは `$GOPATH/pkg/mod` にバージョンを固定してDLされる
-
-```bash
-$ git clone
-$ go version
-go version go1.11.5 darwin/amd64
-$ export GO111MODULE=on # $GOPATH/src 配下の場合
-$ go mod download # GO111MODULE=on go mod download
-$ go build -o app # GO111MODULE=on go build -o app
-$ ./app server
-$ ./app server --type gin # ./app server -t gin
 ```
