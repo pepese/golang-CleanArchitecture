@@ -2,14 +2,13 @@ package domain
 
 import (
 	"github.com/pepese/golang-CleanArchitecture/domain/model"
-	"github.com/pepese/golang-CleanArchitecture/infrastructure/datastore"
 )
 
 /*
 Hello ドメインのインターフェース
 */
 type HelloLogic interface {
-	Create() string
+	Say() string
 }
 
 type helloLogic struct {
@@ -19,10 +18,8 @@ type helloLogic struct {
 /*
 ドメインロジック
 */
-func (d *helloLogic) Create() string {
-	rep := datastore.NewHelloRepository()
-	rep.Create(d.model)
-	return d.model.Say
+func (d *helloLogic) Say() string {
+	return "Hello " + d.model.Name + "!"
 }
 
 /*
