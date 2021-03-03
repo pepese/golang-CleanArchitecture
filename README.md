@@ -1,25 +1,42 @@
 # golang-CleanArchitecture
 
-Go 言語でクリーアーキテクチャを実現する場合の構成を作ってみる。
+Go 言語でクリーアーキテクチャを実現する構成を作ってみる。
 
 ## 実行
 
 ```zsh
-% git clone
 % go version
-go version go1.13.3 darwin/amd64
-% export GO111MODULE=on
-% go mod download
+go version go1.15.6 darwin/amd64
+% go mod tidy
 % go build -o app
-% ./app server
-% ./app server --type gin # ./app server -t gin
+% ./app server # ./app server --type gin # ./app server -t gin
+% curl localhost:8080/hello
+Hello Go!
+```
+
+### Docker
+
+```zsh
+% docker build -t app .
+% docker run -d -p 8080:8080 --name app app
+% curl localhost:8080/hello
+Hello Go!
+% docker container stop app
+```
+
+### Docker Compose
+
+```zsh
+% docker-compose up -d
+% curl localhost:8080/hello
+Hello Go!
+% docker-compose down
 ```
 
 ## 実装メモ
 
 ```zsh
 % pwd # プロジェクトルートであることを確認
-% export GO111MODULE=on
 % go mod init
 % go get -u github.com/spf13/cobra/cobra
 % cobra init $(pwd)
@@ -34,15 +51,6 @@ Add commands to it by running `cobra add [cmdname]`.
 
 ```zsh
 % cobra add server
-```
-
-実行する。
-
-```zsh
-% go build -o app
-% ./app server # ./app server -t gin
-% curl localhost:8080
-Hello Go!
 ```
 
 ## 設計
@@ -81,67 +89,32 @@ Hello Go!
 
 ```
 .
-├── go.mod
-├── go.sum
 ├── main.go
-├─ cmd
-│  ├─ root.go
-│  └─ server.go
-├─ infrastructure           # 第 1 層
-│  ├─datastore
-│  │  └─ hello_datastore.go
-│  └─ server
-│     ├─ gin.go
-│     ├─ http.go
-│     └─ util.go
-├─ interface                # 第 2 層
-│  ├─controller
-│  │  ├─ gin_router.go
-│  │  └─ http_router.go
-│  └─ presenter
-│     ├─ hello.go
-│     └─ hello_repository.go
-├─ usecase                  # 第 3 層
-│  ├─ hello.go
-│  ├─ hello_input.go
-│  └─ hello_output.go
-└─ domain                   # 第 4 層
-   ├─ hello_logic.go
-   └─ model
-      └─ hello.go
-```
-
-```zsh
-.
-├── LICENSE
-├── README.md
 ├── cmd
 │   ├── root.go
 │   └── server.go
-├── domain
-│   ├── hello_logic.go
-│   └── model
-│       └── hello.go
-├── go.mod
-├── go.sum
 ├── infrastructure
-│   ├── datastore
-│   │   └── hello_datastore.go
 │   └── server
-│       ├── ginserver.go
-│       ├── httpserver.go
+│       ├── gin.go
+│       ├── http.go
 │       └── util.go
 ├── interface
 │   ├── controller
 │   │   ├── gin_router.go
 │   │   └── http_router.go
+│   ├── gateway
+│   │   └── hello_datastore.go
 │   └── presenter
-│       └── hello_repository.go
-├── main.go
+│       └── hello.go
 ├── usecase
-│   └── hello_usecase.go
-└── web
-    └── registry
+│   ├── hello.go
+│   ├── hello_input.go
+│   ├── hello_output.go
+│   └── hello_repository.go
+└── domain
+    ├── hello_logic.go
+    └── model
+        └── hello.go
 ```
 
 ## 命名規則
