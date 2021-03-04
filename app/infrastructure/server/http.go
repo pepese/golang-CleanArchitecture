@@ -1,13 +1,6 @@
 package server
 
-import (
-	"github.com/pepese/golang-CleanArchitecture/interface/controller"
-	"github.com/spf13/cobra"
-)
-
-type HttpServer interface {
-	Run(cmd *cobra.Command, args []string)
-}
+import "github.com/pepese/golang-CleanArchitecture/app/interface/controller"
 
 type httpServer struct{}
 

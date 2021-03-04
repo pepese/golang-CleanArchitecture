@@ -16,8 +16,10 @@ services:
     #   - ./docker/development/db/data:/var/lib/mysql
     #   - ./docker/development/db/my.cnf:/etc/mysql/conf.d/my.cnf
     #   - ./docker/development/db/sql:/docker-entrypoint-initdb.d
-  app:
-    image: app:latest
+  ca-app:
+    image: ca-app:latest
     ports:
       - "8080:8080"
-    container_name: app
+    depends_on:
+      - "mysql"
+    container_name: ca-app

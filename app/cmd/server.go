@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/infrastructure/server"
+	"github.com/pepese/golang-CleanArchitecture/app/infrastructure/server"
 	"github.com/spf13/cobra"
 )
 

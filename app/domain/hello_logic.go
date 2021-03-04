@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/pepese/golang-CleanArchitecture/domain/model"
+	"github.com/pepese/golang-CleanArchitecture/app/domain/model"
 )
 
 /*

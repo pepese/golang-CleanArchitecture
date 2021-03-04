@@ -3,7 +3,7 @@ package gateway
 import (
 	"fmt"
 
-	"github.com/pepese/golang-CleanArchitecture/domain/model"
+	"github.com/pepese/golang-CleanArchitecture/app/domain/model"
 )
 
 type helloRepository struct{}

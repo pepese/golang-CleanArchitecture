@@ -14,8 +14,15 @@
 
 package main
 
-import "github.com/pepese/golang-CleanArchitecture/cmd"
+import (
+	"github.com/pepese/golang-CleanArchitecture/app"
+	"github.com/pepese/golang-CleanArchitecture/app/cmd"
+	"github.com/pepese/golang-CleanArchitecture/app/infrastructure/datastore"
+)
 
 func main() {
+	app.Config()
+	db := datastore.Gorm()
+	defer db.Close()
 	cmd.Execute()
 }
