@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>app: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/pepese/golang-CleanArchitecture/app/config.go (100.0%)</option>
+				
+				<option value="file1">github.com/pepese/golang-CleanArchitecture/app/interface/controller/gin_router.go (83.0%)</option>
+				
+				<option value="file2">github.com/pepese/golang-CleanArchitecture/app/interface/controller/http_router.go (0.0%)</option>
+				
+				<option value="file3">github.com/pepese/golang-CleanArchitecture/app/logger.go (85.0%)</option>
+				
+				<option value="file4">github.com/pepese/golang-CleanArchitecture/app/usecase/hello.go (0.0%)</option>
+				
+				<option value="file5">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_input.go (0.0%)</option>
+				
+				<option value="file6">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_output.go (0.0%)</option>
+				
+				<option value="file7">github.com/pepese/golang-CleanArchitecture/app/usecase/user.go (13.3%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package app
+
+import (
+        "sync"
+
+        "github.com/kelseyhightower/envconfig"
+)
+
+type config struct {
+        AppName     string `envconfig:"APP_NAME" default:"ca-app"`
+        AppVersion  string `envconfig:"APP_VERSION" default:"undefined"`
+        RdbType     string `envconfig:"RDB_TYPE" default:"mysql"`
+        RdbUser     string `envconfig:"RDB_USER" default:"testuser"`
+        RdbPassword string `envconfig:"RDB_PASSWORD" default:"testpass"`
+        RdbProtocol string `envconfig:"RDB_PROTOCOL" default:"tcp"`
+        RdbHost     string `envconfig:"RDB_HOST" default:"mysql:3306"`
+        RdbName     string `envconfig:"RDB_NAME" default:"testdb"`
+}
+
+var (
+        conf  *config
+        cOnce sync.Once
+)
+
+func Config() *config <span class="cov8" title="1">{
+        initConfig()
+        return conf
+}</span>
+
+func initConfig() <span class="cov8" title="1">{
+        cOnce.Do(func() </span><span class="cov8" title="1">{
+                conf = &amp;config{}
+                envconfig.Process("", conf)
+        }</span>)
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package controller
+
+import (
+        "context"
+        "net/http"
+        "reflect"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+        "github.com/pepese/golang-CleanArchitecture/app/domain/model"
+        db "github.com/pepese/golang-CleanArchitecture/app/interface/gateway"
+        "github.com/pepese/golang-CleanArchitecture/app/interface/presenter"
+        "github.com/pepese/golang-CleanArchitecture/app/usecase"
+)
+
+func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span class="cov8" title="1">{
+        router := e.Group("/api/v1")
+
+        //////////////////
+        // Hello UseCase
+        //////////////////
+        hello := router.Group("/hello")
+        // input
+        hin := usecase.NewHelloInput("Go")
+        // usecase
+        huc := usecase.NewHelloUsecase(hin)
+        // router
+        hello.GET("", func(c *gin.Context) </span><span class="cov0" title="0">{
+                // exec usecase
+                huc.Say()
+                // exec presenter
+                r := presenter.HelloRender(huc.Out)
+
+                c.String(http.StatusOK, r)
+        }</span>)
+
+        //////////////////
+        // User UseCase
+        //////////////////
+        <span class="cov8" title="1">user := router.Group("/users")
+        if (userUc == nil) || reflect.ValueOf(userUc).IsNil() </span><span class="cov0" title="0">{
+                userUc = &amp;usecase.UserUsecase{
+                        UserRepo: db.NewUserRepository(),
+                }
+        }</span>
+        // GET /api/v1/users
+        <span class="cov8" title="1">user.GET("", func(c *gin.Context) </span><span class="cov8" title="1">{
+                m := model.User{}
+                c.Bind(&amp;m)
+                result, err := userUc.List(c.Value("ctx").(context.Context), &amp;m)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, nil)
+                }</span> else<span class="cov8" title="1"> {
+                        c.JSON(http.StatusOK, result)
+                }</span>
+        })
+        // GET /api/v1/users/:user_id
+        <span class="cov8" title="1">user.GET("/:user_id", func(c *gin.Context) </span><span class="cov8" title="1">{
+                m := model.User{}
+                c.Bind(&amp;m)
+                id, _ := strconv.Atoi(c.Params.ByName("user_id"))
+                m.ID = id
+                result, err := userUc.Get(c.Value("ctx").(context.Context), &amp;m)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, nil)
+                }</span> else<span class="cov8" title="1"> {
+                        c.JSON(http.StatusOK, result)
+                }</span>
+        })
+        // POST /api/v1/users
+        <span class="cov8" title="1">user.POST("", func(c *gin.Context) </span><span class="cov8" title="1">{
+                m := model.User{}
+                c.Bind(&amp;m)
+                result, err := userUc.Create(c.Value("ctx").(context.Context), &amp;m)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, nil)
+                }</span> else<span class="cov8" title="1"> {
+                        c.JSON(http.StatusOK, result)
+                }</span>
+        })
+        // PUT /api/v1/users/:user_id
+        <span class="cov8" title="1">user.PUT("/:user_id", func(c *gin.Context) </span><span class="cov8" title="1">{
+                m := model.User{}
+                c.Bind(&amp;m)
+                id, _ := strconv.Atoi(c.Params.ByName("user_id"))
+                m.ID = id
+                result, err := userUc.Update(c.Value("ctx").(context.Context), &amp;m)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, nil)
+                }</span> else<span class="cov8" title="1"> {
+                        c.JSON(http.StatusOK, result)
+                }</span>
+        })
+        // DELETE /api/v1/users/:user_id
+        <span class="cov8" title="1">user.DELETE("/:user_id", func(c *gin.Context) </span><span class="cov8" title="1">{
+                m := model.User{}
+                c.Bind(&amp;m)
+                id, _ := strconv.Atoi(c.Params.ByName("user_id"))
+                m.ID = id
+                result, err := userUc.Delete(c.Value("ctx").(context.Context), &amp;m)
+                if err != nil </span><span class="cov0" title="0">{
+                        c.JSON(http.StatusInternalServerError, nil)
+                }</span> else<span class="cov8" title="1"> {
+                        c.JSON(http.StatusOK, result)
+                }</span>
+        })
+
+        <span class="cov8" title="1">return e</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package controller
+
+import (
+        "fmt"
+        "net/http"
+
+        "github.com/pepese/golang-CleanArchitecture/app/interface/presenter"
+        "github.com/pepese/golang-CleanArchitecture/app/usecase"
+)
+
+/*
+NewHttpRouter returns *http.ServeMux as a http handler.
+*/
+func NewHttpRouter() *http.ServeMux <span class="cov0" title="0">{
+        mux := http.NewServeMux()
+
+        //////////////////
+        // Hello UseCase
+        //////////////////
+        // input
+        hin := usecase.NewHelloInput("Go")
+        // usecase
+        huc := usecase.NewHelloUsecase(hin)
+        // router
+        mux.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                // exec usecase
+                huc.Say()
+                // exec presenter
+                rep := presenter.HelloRender(huc.Out)
+
+                w.WriteHeader(http.StatusOK)
+                fmt.Fprintf(w, rep)
+        }</span>)
+
+        <span class="cov0" title="0">return mux</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package app
+
+import (
+        "context"
+        "sync"
+
+        "go.uber.org/zap"
+        "go.uber.org/zap/zapcore"
+)
+
+type key int
+
+const loggerKey = key(1)
+
+var (
+        desugaredLogger     *zap.Logger
+        desugaredLoggerOnce sync.Once
+        logger              *zap.SugaredLogger
+        loggerOnce          sync.Once
+)
+
+func getDesugaredLogger() *zap.Logger <span class="cov8" title="1">{
+        desugaredLoggerOnce.Do(func() </span><span class="cov8" title="1">{
+                config := zap.Config{
+                        Level:    zap.NewAtomicLevelAt(zapcore.InfoLevel),
+                        Encoding: "json",
+                        EncoderConfig: zapcore.EncoderConfig{
+                                MessageKey:     "message",
+                                LevelKey:       "level",
+                                TimeKey:        "timestamp",
+                                NameKey:        "name",
+                                CallerKey:      "caller",
+                                StacktraceKey:  "stacktrace",
+                                EncodeLevel:    zapcore.LowercaseLevelEncoder,
+                                EncodeTime:     zapcore.ISO8601TimeEncoder,
+                                EncodeDuration: zapcore.StringDurationEncoder,
+                                EncodeCaller:   zapcore.ShortCallerEncoder,
+                        },
+                        OutputPaths:      []string{"stdout"},
+                        ErrorOutputPaths: []string{"stderr"},
+                }
+                zapLogger, err := config.Build()
+                if err != nil </span><span class="cov0" title="0">{
+                        panic(err)</span>
+                }
+                <span class="cov8" title="1">desugaredLogger = zapLogger.With(
+                        zap.String("app", Config().AppName),
+                        zap.String("version", Config().AppVersion),
+                )</span>
+        })
+        <span class="cov8" title="1">return desugaredLogger</span>
+}
+
+func Logger() *zap.SugaredLogger <span class="cov8" title="1">{
+        tmpLogger := getDesugaredLogger()
+        loggerOnce.Do(func() </span><span class="cov8" title="1">{
+                logger = tmpLogger.Sugar()
+        }</span>)
+        <span class="cov8" title="1">return logger</span>
+}
+
+func LoggerFromContext(c context.Context) *zap.SugaredLogger <span class="cov8" title="1">{
+        if c == nil </span><span class="cov0" title="0">{
+                return Logger()
+        }</span>
+        <span class="cov8" title="1">if zapLogger, ok := c.Value(loggerKey).(*zap.SugaredLogger); ok </span><span class="cov8" title="1">{
+                return zapLogger
+        }</span>
+        <span class="cov0" title="0">return Logger()</span>
+
+}
+
+func SetLoggerToContext(c context.Context, logger *zap.SugaredLogger) context.Context <span class="cov8" title="1">{
+        return context.WithValue(c, loggerKey, logger)
+}</span>
+
+func LoggerWithKeyValue(key string, value string) *zap.SugaredLogger <span class="cov8" title="1">{
+        tmpLogger := getDesugaredLogger()
+        tmpLogger = tmpLogger.With(
+                zap.String(key, value),
+        )
+        return tmpLogger.Sugar()
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package usecase
+
+import (
+        "github.com/pepese/golang-CleanArchitecture/app/domain"
+        "github.com/pepese/golang-CleanArchitecture/app/domain/model"
+        "github.com/pepese/golang-CleanArchitecture/app/interface/gateway"
+)
+
+/*
+HelloUC interface contains Usecase methods.
+*/
+type HelloUsecaser interface {
+        Say()
+}
+
+type helloUsecase struct {
+        in  *helloInput
+        Out *HelloOutput
+}
+
+/*
+ユースケースは1つ以上のドメインモデル・ロジックを用いて実装される。
+*/
+func (uc *helloUsecase) Say() <span class="cov0" title="0">{
+        // ドメインモデルの作成
+        m := &amp;model.Hello{Name: uc.in.name}
+        // Repository
+        var rep HelloRepository = gateway.NewHelloRepository()
+        rep.Create(m)
+        // ユースケースで実行するドメインロジックの作成
+        d := domain.NewHelloLogic(m)
+        // ドメインロジックの実行
+        r := d.Say()
+        // output
+        o := NewHelloOutput(r)
+        uc.Out = o
+
+        return
+}</span>
+
+/*
+NewHelloUC returns *helloUC.
+*/
+func NewHelloUsecase(in *helloInput) *helloUsecase <span class="cov0" title="0">{
+        return &amp;helloUsecase{in: in}
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package usecase
+
+type helloInput struct {
+        name string
+}
+
+/*
+NewHelloInput returns *helloInput.
+*/
+func NewHelloInput(name string) *helloInput <span class="cov0" title="0">{
+        return &amp;helloInput{name: name}
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package usecase
+
+type HelloOutput struct {
+        Reply string
+}
+
+/*
+NewHelloOutput returns *helloOutput.
+*/
+func NewHelloOutput(reply string) *HelloOutput <span class="cov0" title="0">{
+        return &amp;HelloOutput{Reply: reply}
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package usecase
+
+import (
+        "context"
+
+        "github.com/pepese/golang-CleanArchitecture/app"
+        "github.com/pepese/golang-CleanArchitecture/app/domain/model"
+)
+
+/*
+UserUsecaser interface.
+*/
+type UserUsecaser interface {
+        List(c context.Context, m *model.User) (model.Users, error)
+        Get(c context.Context, m *model.User) (*model.User, error)
+        Create(c context.Context, m *model.User) (*model.User, error)
+        Update(c context.Context, m *model.User) (*model.User, error)
+        Delete(c context.Context, m *model.User) (*model.User, error)
+}
+
+/*
+UserUsecase mode.
+*/
+type UserUsecase struct {
+        UserRepo UserRepository
+}
+
+/*
+List func is UserUsecase implement.
+*/
+func (u UserUsecase) List(c context.Context, m *model.User) (model.Users, error) <span class="cov8" title="1">{
+        logger := app.LoggerFromContext(c)
+        result, err := u.UserRepo.List(m)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error(err)
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return result, nil</span>
+}
+
+func (u UserUsecase) Get(c context.Context, m *model.User) (*model.User, error) <span class="cov0" title="0">{
+        logger := app.LoggerFromContext(c)
+        result, err := u.UserRepo.Get(m)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error(err)
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+
+func (u UserUsecase) Create(c context.Context, m *model.User) (*model.User, error) <span class="cov0" title="0">{
+        logger := app.LoggerFromContext(c)
+        result, err := u.UserRepo.Create(m)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error(err)
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+
+func (u UserUsecase) Update(c context.Context, m *model.User) (*model.User, error) <span class="cov0" title="0">{
+        logger := app.LoggerFromContext(c)
+        result, err := u.UserRepo.Update(m)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error(err)
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+
+func (u UserUsecase) Delete(c context.Context, m *model.User) (*model.User, error) <span class="cov0" title="0">{
+        logger := app.LoggerFromContext(c)
+        result, err := u.UserRepo.Delete(m)
+        if err != nil </span><span class="cov0" title="0">{
+                logger.Error(err)
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return result, nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

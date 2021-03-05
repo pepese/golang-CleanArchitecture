@@ -5,78 +5,75 @@ import (
 
 	"github.com/pepese/golang-CleanArchitecture/app"
 	"github.com/pepese/golang-CleanArchitecture/app/domain/model"
-	db "github.com/pepese/golang-CleanArchitecture/app/interface/gateway"
 )
 
 /*
 UserUsecaser interface.
 */
-// type UserUsecaser interface {
-// 	List() model.Users
-// }
+type UserUsecaser interface {
+	List(c context.Context, m *model.User) (model.Users, error)
+	Get(c context.Context, m *model.User) (*model.User, error)
+	Create(c context.Context, m *model.User) (*model.User, error)
+	Update(c context.Context, m *model.User) (*model.User, error)
+	Delete(c context.Context, m *model.User) (*model.User, error)
+}
 
 /*
 UserUsecase mode.
 */
-type UserUsecase struct{}
-
-var userRepository UserRepository
-
-func (UserUsecase) Init() {
-	userRepository = db.NewUserRepository()
+type UserUsecase struct {
+	UserRepo UserRepository
 }
 
 /*
 List func is UserUsecase implement.
 */
-func (UserUsecase) List(c context.Context, m *model.User) model.Users {
+func (u UserUsecase) List(c context.Context, m *model.User) (model.Users, error) {
 	logger := app.LoggerFromContext(c)
-	result, err := userRepository.List(m)
+	result, err := u.UserRepo.List(m)
 	if err != nil {
 		logger.Error(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
-func (UserUsecase) Get(c context.Context, m *model.User) *model.User {
+func (u UserUsecase) Get(c context.Context, m *model.User) (*model.User, error) {
 	logger := app.LoggerFromContext(c)
-	result, err := userRepository.Get(m)
+	result, err := u.UserRepo.Get(m)
 	if err != nil {
 		logger.Error(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
-func (UserUsecase) Create(c context.Context, m *model.User) *model.User {
+func (u UserUsecase) Create(c context.Context, m *model.User) (*model.User, error) {
 	logger := app.LoggerFromContext(c)
-	result, err := userRepository.Create(m)
+	result, err := u.UserRepo.Create(m)
 	if err != nil {
 		logger.Error(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
-func (UserUsecase) Update(c context.Context, m *model.User) *model.User {
+func (u UserUsecase) Update(c context.Context, m *model.User) (*model.User, error) {
 	logger := app.LoggerFromContext(c)
-	result, err := userRepository.Update(m)
+	result, err := u.UserRepo.Update(m)
 	if err != nil {
 		logger.Error(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
-func (UserUsecase) Delete(c context.Context, m *model.User) *model.User {
+func (u UserUsecase) Delete(c context.Context, m *model.User) (*model.User, error) {
 	logger := app.LoggerFromContext(c)
-	result, err := userRepository.Delete(m)
+	result, err := u.UserRepo.Delete(m)
 	if err != nil {
 		logger.Error(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
-
-/*
-NewUserUsecase returns *userUsecase.
-*/
-// func NewUserUsecase() *userUsecase {
-// 	return &userUsecase{}
-// }

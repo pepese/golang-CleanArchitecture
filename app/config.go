@@ -7,7 +7,7 @@ import (
 )
 
 type config struct {
-	AppName     string `envconfig:"APP_NAME" default:"golang-gin-sample"`
+	AppName     string `envconfig:"APP_NAME" default:"ca-app"`
 	AppVersion  string `envconfig:"APP_VERSION" default:"undefined"`
 	RdbType     string `envconfig:"RDB_TYPE" default:"mysql"`
 	RdbUser     string `envconfig:"RDB_USER" default:"testuser"`

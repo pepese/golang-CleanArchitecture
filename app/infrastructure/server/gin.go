@@ -18,7 +18,7 @@ type ginServer struct {
 }
 
 func (hs *ginServer) Run() {
-	router := controller.NewGinRouter(hs.e)
+	router := controller.NewGinRouter(hs.e, nil)
 	RunWithGracefulStop(router)
 }
 
