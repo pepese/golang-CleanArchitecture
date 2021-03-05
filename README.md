@@ -181,3 +181,5 @@ Add commands to it by running `cobra add [cmdname]`.
 ## 参考
 
 - [Standard Go Project Layout](https://github.com/golang-standards/project-layout)
+- [The Algorithms - Go](https://github.com/TheAlgorithms/Go)
+- [go-algorithms](https://github.com/0xAX/go-algorithms)
