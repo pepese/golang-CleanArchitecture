@@ -13,8 +13,13 @@ import (
 	"github.com/pepese/golang-CleanArchitecture/app/usecase"
 )
 
-func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
-	router := e.Group("/api/v1")
+type ginRouter struct {
+	e      *gin.Engine
+	userUc usecase.UserUsecaser
+}
+
+func (g *ginRouter) GinRouter() *gin.Engine {
+	router := g.e.Group("/api/v1")
 
 	//////////////////
 	// Hello UseCase
@@ -38,8 +43,8 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 	// User UseCase
 	//////////////////
 	user := router.Group("/users")
-	if (userUc == nil) || reflect.ValueOf(userUc).IsNil() {
-		userUc = &usecase.UserUsecase{
+	if (g.userUc == nil) || reflect.ValueOf(g.userUc).IsNil() {
+		g.userUc = &usecase.UserUsecase{
 			UserRepo: db.NewUserRepository(),
 		}
 	}
@@ -47,7 +52,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 	user.GET("", func(c *gin.Context) {
 		m := model.User{}
 		c.Bind(&m)
-		result, err := userUc.List(c.Value("ctx").(context.Context), &m)
+		result, err := g.userUc.List(c.Value("ctx").(context.Context), &m)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
@@ -60,7 +65,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 		c.Bind(&m)
 		id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 		m.ID = id
-		result, err := userUc.Get(c.Value("ctx").(context.Context), &m)
+		result, err := g.userUc.Get(c.Value("ctx").(context.Context), &m)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
@@ -71,7 +76,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 	user.POST("", func(c *gin.Context) {
 		m := model.User{}
 		c.Bind(&m)
-		result, err := userUc.Create(c.Value("ctx").(context.Context), &m)
+		result, err := g.userUc.Create(c.Value("ctx").(context.Context), &m)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
@@ -84,7 +89,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 		c.Bind(&m)
 		id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 		m.ID = id
-		result, err := userUc.Update(c.Value("ctx").(context.Context), &m)
+		result, err := g.userUc.Update(c.Value("ctx").(context.Context), &m)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
@@ -97,7 +102,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 		c.Bind(&m)
 		id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 		m.ID = id
-		result, err := userUc.Delete(c.Value("ctx").(context.Context), &m)
+		result, err := g.userUc.Delete(c.Value("ctx").(context.Context), &m)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, nil)
 		} else {
@@ -105,5 +110,12 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine {
 		}
 	})
 
-	return e
+	return g.e
+}
+
+func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *ginRouter {
+	return &ginRouter{
+		e:      e,
+		userUc: userUc,
+	}
 }

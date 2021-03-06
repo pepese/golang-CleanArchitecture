@@ -33,7 +33,8 @@ func TestUsersAPI(t *testing.T) {
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().List(gomock.Any(), gomock.Any()).Return(model.Users{}, nil)
 
-		testRouter := NewGinRouter(getGinEngine(), m)
+		gRouter := NewGinRouter(getGinEngine(), m)
+		testRouter := gRouter.GinRouter()
 		req, _ := http.NewRequest("GET", "/api/v1/users", nil)
 
 		res := httptest.NewRecorder()
@@ -47,7 +48,8 @@ func TestUsersAPI(t *testing.T) {
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
 
-		testRouter := NewGinRouter(getGinEngine(), m)
+		gRouter := NewGinRouter(getGinEngine(), m)
+		testRouter := gRouter.GinRouter()
 		req, _ := http.NewRequest("POST", "/api/v1/users", strings.NewReader(`
 		{
 			"first_name": "First",
@@ -65,7 +67,8 @@ func TestUsersAPI(t *testing.T) {
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Get(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
 
-		testRouter := NewGinRouter(getGinEngine(), m)
+		gRouter := NewGinRouter(getGinEngine(), m)
+		testRouter := gRouter.GinRouter()
 		req, _ := http.NewRequest("GET", "/api/v1/users/1", nil)
 
 		res := httptest.NewRecorder()
@@ -78,7 +81,8 @@ func TestUsersAPI(t *testing.T) {
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Update(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
 
-		testRouter := NewGinRouter(getGinEngine(), m)
+		gRouter := NewGinRouter(getGinEngine(), m)
+		testRouter := gRouter.GinRouter()
 		req, _ := http.NewRequest("PUT", "/api/v1/users/1", strings.NewReader(`
 		{
 			"first_name": "FirstX",
@@ -96,7 +100,8 @@ func TestUsersAPI(t *testing.T) {
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Delete(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
 
-		testRouter := NewGinRouter(getGinEngine(), m)
+		gRouter := NewGinRouter(getGinEngine(), m)
+		testRouter := gRouter.GinRouter()
 		req, _ := http.NewRequest("DELETE", "/api/v1/users/1", nil)
 
 		res := httptest.NewRecorder()

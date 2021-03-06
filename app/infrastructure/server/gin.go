@@ -13,20 +13,21 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type ginServer struct {
-	e *gin.Engine
-}
+var gEn *gin.Engine
+
+type ginServer struct{}
 
 func (hs *ginServer) Run() {
-	router := controller.NewGinRouter(hs.e, nil)
-	RunWithGracefulStop(router)
+	RunWithGracefulStop(gEn)
 }
 
 func NewGinServer() *ginServer {
 	e := gin.New()
 	e.Use(accessLogging())
 	e.Use(gin.Recovery())
-	return &ginServer{e: e}
+	r := controller.NewGinRouter(e, nil) // ここで UC を設定する
+	gEn = r.GinRouter()
+	return &ginServer{}
 }
 
 type responseBodyWriter struct {
