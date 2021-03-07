@@ -23,9 +23,9 @@ v1.5.0
 % go test ./...
 
 % go test -v -cover ./...
-% go test -coverprofile=./coverage/cover.out ./...
-% go tool cover -html=./coverage/cover.out -o ./coverage/cover.html
-% open ./coverage/cover.html
+% go test -coverprofile=./test/coverage/cover.out ./...
+% go tool cover -html=./test/coverage/cover.out -o ./test/coverage/cover.html
+% open ./test/coverage/cover.html
 ```
 
 ## 結合テスト
@@ -40,32 +40,53 @@ postman / newman を利用してテストを実行する。
 以下で実行。
 
 ```
-% % newman run test/postman/collection/ca-app\ test.postman_collection.json 
+% newman run -e test/postman/env/docker-compose.postman_environment.json test/postman/collection/ca-app.postman_collection.json
 newman
 
-ca-app test
+ca-app
 
 → Get Users
-  GET localhost:8080/api/v1/users [200 OK, 177B, 91ms]
+  GET localhost:8080/api/v1/users [200 OK, 177B, 101ms]
   ✓  Status code is 200
 
-┌─────────────────────────┬──────────────────┬──────────────────┐
-│                         │         executed │           failed │
-├─────────────────────────┼──────────────────┼──────────────────┤
-│              iterations │                1 │                0 │
-├─────────────────────────┼──────────────────┼──────────────────┤
-│                requests │                1 │                0 │
-├─────────────────────────┼──────────────────┼──────────────────┤
-│            test-scripts │                1 │                0 │
-├─────────────────────────┼──────────────────┼──────────────────┤
-│      prerequest-scripts │                0 │                0 │
-├─────────────────────────┼──────────────────┼──────────────────┤
-│              assertions │                1 │                0 │
-├─────────────────────────┴──────────────────┴──────────────────┤
-│ total run duration: 149ms                                     │
-├───────────────────────────────────────────────────────────────┤
-│ total data received: 3B (approx)                              │
-├───────────────────────────────────────────────────────────────┤
-│ average response time: 91ms [min: 91ms, max: 91ms, s.d.: 0µs] │
-└───────────────────────────────────────────────────────────────┘
+┌─────────────────────────┬────────────────────┬───────────────────┐
+│                         │           executed │            failed │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│              iterations │                  1 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│                requests │                  1 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│            test-scripts │                  2 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│      prerequest-scripts │                  1 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│              assertions │                  1 │                 0 │
+├─────────────────────────┴────────────────────┴───────────────────┤
+│ total run duration: 166ms                                        │
+├──────────────────────────────────────────────────────────────────┤
+│ total data received: 3B (approx)                                 │
+├──────────────────────────────────────────────────────────────────┤
+│ average response time: 101ms [min: 101ms, max: 101ms, s.d.: 0µs] │
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+### テストコードの作成
+
+Postman の GUI でテストを作成する。  
+設定項目は以下。
+
+|項目|内容|
+|:---|:---|
+|Authorization|Basic AuthやOAuth2など、リクエストの認証方法を指定する|
+|Headers|content-typeやAuthorizationなど、リクエストヘッダを指定する|
+|Body|PostやPUTなどの場合に指定するリクエストボディ|
+|Pre-request Script|リクエスト前に実行するJSコード|
+|Tests|レスポンスペイロードの妥当性を検証するJSコード|
+
+作成した内容は JOSN 形式で Export 可能。
+
+### 環境変数の設定
+
+同じく Postman の GUI で設定可能。  
+設定方法は右上の歯車マークから「 MANAGE ENVIRONMENTS 」を選択。  
+作成して名前を付けた環境情報は JSON 形式で 「 Download Environment 」から取得可能。

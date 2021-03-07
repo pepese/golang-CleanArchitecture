@@ -7,8 +7,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ca-app
 
 FROM alpine:3.13
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata mysql-client
 ENV TZ Asia/Tokyo
 COPY --from=build /build/ca-app /usr/local/bin/ca-app
+COPY ./scripts/wait-for-mysql.sh /usr/local/bin/wait-for-mysql.sh
 EXPOSE 8080
-CMD ["/usr/local/bin/ca-app", "server", "--type", "gin"]
+CMD ["sh", "/usr/local/bin/wait-for-mysql.sh", "mysql", "testuser", "testpass", "/usr/local/bin/ca-app", "server", "--type", "gin"]

@@ -57,7 +57,7 @@
 				
 				<option value="file0">github.com/pepese/golang-CleanArchitecture/app/config.go (100.0%)</option>
 				
-				<option value="file1">github.com/pepese/golang-CleanArchitecture/app/interface/controller/gin_router.go (83.0%)</option>
+				<option value="file1">github.com/pepese/golang-CleanArchitecture/app/interface/controller/gin_router.go (83.3%)</option>
 				
 				<option value="file2">github.com/pepese/golang-CleanArchitecture/app/interface/controller/http_router.go (0.0%)</option>
 				
@@ -135,8 +135,13 @@ import (
         "github.com/pepese/golang-CleanArchitecture/app/usecase"
 )
 
-func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span class="cov8" title="1">{
-        router := e.Group("/api/v1")
+type ginRouter struct {
+        e      *gin.Engine
+        userUc usecase.UserUsecaser
+}
+
+func (g *ginRouter) GinRouter() *gin.Engine <span class="cov8" title="1">{
+        router := g.e.Group("/api/v1")
 
         //////////////////
         // Hello UseCase
@@ -160,8 +165,8 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
         // User UseCase
         //////////////////
         <span class="cov8" title="1">user := router.Group("/users")
-        if (userUc == nil) || reflect.ValueOf(userUc).IsNil() </span><span class="cov0" title="0">{
-                userUc = &amp;usecase.UserUsecase{
+        if (g.userUc == nil) || reflect.ValueOf(g.userUc).IsNil() </span><span class="cov0" title="0">{
+                g.userUc = &amp;usecase.UserUsecase{
                         UserRepo: db.NewUserRepository(),
                 }
         }</span>
@@ -169,7 +174,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
         <span class="cov8" title="1">user.GET("", func(c *gin.Context) </span><span class="cov8" title="1">{
                 m := model.User{}
                 c.Bind(&amp;m)
-                result, err := userUc.List(c.Value("ctx").(context.Context), &amp;m)
+                result, err := g.userUc.List(c.Value("ctx").(context.Context), &amp;m)
                 if err != nil </span><span class="cov0" title="0">{
                         c.JSON(http.StatusInternalServerError, nil)
                 }</span> else<span class="cov8" title="1"> {
@@ -182,7 +187,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
                 c.Bind(&amp;m)
                 id, _ := strconv.Atoi(c.Params.ByName("user_id"))
                 m.ID = id
-                result, err := userUc.Get(c.Value("ctx").(context.Context), &amp;m)
+                result, err := g.userUc.Get(c.Value("ctx").(context.Context), &amp;m)
                 if err != nil </span><span class="cov0" title="0">{
                         c.JSON(http.StatusInternalServerError, nil)
                 }</span> else<span class="cov8" title="1"> {
@@ -193,7 +198,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
         <span class="cov8" title="1">user.POST("", func(c *gin.Context) </span><span class="cov8" title="1">{
                 m := model.User{}
                 c.Bind(&amp;m)
-                result, err := userUc.Create(c.Value("ctx").(context.Context), &amp;m)
+                result, err := g.userUc.Create(c.Value("ctx").(context.Context), &amp;m)
                 if err != nil </span><span class="cov0" title="0">{
                         c.JSON(http.StatusInternalServerError, nil)
                 }</span> else<span class="cov8" title="1"> {
@@ -206,7 +211,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
                 c.Bind(&amp;m)
                 id, _ := strconv.Atoi(c.Params.ByName("user_id"))
                 m.ID = id
-                result, err := userUc.Update(c.Value("ctx").(context.Context), &amp;m)
+                result, err := g.userUc.Update(c.Value("ctx").(context.Context), &amp;m)
                 if err != nil </span><span class="cov0" title="0">{
                         c.JSON(http.StatusInternalServerError, nil)
                 }</span> else<span class="cov8" title="1"> {
@@ -219,7 +224,7 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
                 c.Bind(&amp;m)
                 id, _ := strconv.Atoi(c.Params.ByName("user_id"))
                 m.ID = id
-                result, err := userUc.Delete(c.Value("ctx").(context.Context), &amp;m)
+                result, err := g.userUc.Delete(c.Value("ctx").(context.Context), &amp;m)
                 if err != nil </span><span class="cov0" title="0">{
                         c.JSON(http.StatusInternalServerError, nil)
                 }</span> else<span class="cov8" title="1"> {
@@ -227,8 +232,15 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *gin.Engine <span 
                 }</span>
         })
 
-        <span class="cov8" title="1">return e</span>
+        <span class="cov8" title="1">return g.e</span>
 }
+
+func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *ginRouter <span class="cov8" title="1">{
+        return &amp;ginRouter{
+                e:      e,
+                userUc: userUc,
+        }
+}</span>
 </pre>
 		
 		<pre class="file" id="file2" style="display: none">package controller

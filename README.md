@@ -11,8 +11,6 @@ Hello Go!
 % docker-compose down
 ```
 
-MySQL 起動前に ca-app が MySQL にアクセスしてエラー停止する場合があるので、その際は `docker-compose up -d` をもう一度実行する。
-
 >以下、動かないがメモ程度に。
 >
 >### アプリ単体

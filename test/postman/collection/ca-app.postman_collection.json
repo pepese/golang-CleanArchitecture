@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "23801a2b-f137-4b62-a2fa-ca222c346e34",
-		"name": "ca-app test",
+		"_postman_id": "dbb928c5-7c52-413f-b25e-0ab0109d781e",
+		"name": "ca-app",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -25,11 +25,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/api/v1/users",
+					"raw": "{{endpoint}}:{{port}}/api/v1/users",
 					"host": [
-						"localhost"
+						"{{endpoint}}"
 					],
-					"port": "8080",
+					"port": "{{port}}",
 					"path": [
 						"api",
 						"v1",
@@ -38,6 +38,28 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b9401a8d-6cb6-4208-9d53-d2ebf1758ca8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "85655f03-2f62-4fc5-ba2d-b2795e8da132",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
