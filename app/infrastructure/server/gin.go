@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,20 +14,26 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-var gEn *gin.Engine
+var (
+	gEn     *gin.Engine
+	gEnOnce sync.Once
+)
 
 type ginServer struct{}
 
 func (hs *ginServer) Run() {
+	NewGinServer()
 	RunWithGracefulStop(gEn)
 }
 
 func NewGinServer() *ginServer {
-	e := gin.New()
-	e.Use(accessLogging())
-	e.Use(gin.Recovery())
-	r := controller.NewGinRouter(e, nil) // ここで UC を設定する
-	gEn = r.GinRouter()
+	gEnOnce.Do(func() {
+		e := gin.New()
+		e.Use(accessLogging())
+		e.Use(gin.Recovery())
+		r := controller.NewGinRouter(e, nil) // ここで UC を設定する
+		gEn = r.GinRouter()
+	})
 	return &ginServer{}
 }
 

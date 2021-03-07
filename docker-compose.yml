@@ -17,7 +17,10 @@ services:
     #   - ./docker/development/db/my.cnf:/etc/mysql/conf.d/my.cnf
     #   - ./docker/development/db/sql:/docker-entrypoint-initdb.d
   ca-app:
-    image: ca-app:latest
+    # image: ca-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:

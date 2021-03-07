@@ -5,35 +5,37 @@ Go 言語でクリーアーキテクチャを実現する構成を作ってみ�
 ## 実行
 
 ```zsh
-% go version
-go version go1.15.6 darwin/amd64
-% go mod tidy
-% go build -o ca-app
-% ./app server # ./app server --type gin # ./app server -t gin
-% curl localhost:8080/api/v1/hello
-Hello Go!
-```
-
-### Docker
-
-```zsh
-% docker build -t ca-app .
-% docker run -d -p 8080:8080 --name ca-app ca-app
-% curl localhost:8080/api/v1/hello
-Hello Go!
-% docker container stop ca-app
-```
-
-### Docker Compose
-
-```zsh
-% docker-compose up -d
+% docker-compose up --build -d
 % curl localhost:8080/api/v1/hello
 Hello Go!
 % docker-compose down
 ```
 
 MySQL 起動前に ca-app が MySQL にアクセスしてエラー停止する場合があるので、その際は `docker-compose up -d` をもう一度実行する。
+
+>以下、動かないがメモ程度に。
+>
+>### アプリ単体
+>
+>```zsh
+>% go version
+>go version go1.15.6 darwin/amd64
+>% go mod tidy
+>% go build -o ca-app
+>% ./app server # ./app server --type gin # ./app server -t gin
+>% curl localhost:8080/api/v1/hello
+>Hello Go!
+>```
+>
+>### Docker単体
+>
+>```zsh
+>% docker build -t ca-app .
+>% docker run -d -p 8080:8080 --name ca-app ca-app
+>% curl localhost:8080/api/v1/hello
+>Hello Go!
+>% docker container stop ca-app
+>```
 
 ## テスト
 
@@ -109,7 +111,7 @@ MySQL 起動前に ca-app が MySQL にアクセスしてエラー停止する�
 []
 ```
 
-### テーブルの確認
+#### テーブルの確認
 
 ```zsh
 % docker exec -it <container_id> /bin/bash
