@@ -37,22 +37,7 @@ MySQL 起動前に ca-app が MySQL にアクセスしてエラー停止する�
 >% docker container stop ca-app
 >```
 
-## テスト
-
-### 単体テスト
-
-[モック](./docs/mock.md)
-
-```zsh
-% go test ./...
-
-% go test -v -cover ./...
-% go test -coverprofile=./coverage/cover.out ./...
-% go tool cover -html=./coverage/cover.out -o ./coverage/cover.html
-% open ./coverage/cover.html
-```
-
-### 結合テスト
+## 疎通
 
 ```zsh
 % curl -X POST -H 'Content-Type:application/json' -d '{"first_name":"first","last_name":"last"}' localhost:8080/api/v1/users | jq .
@@ -111,7 +96,7 @@ MySQL 起動前に ca-app が MySQL にアクセスしてエラー停止する�
 []
 ```
 
-#### テーブルの確認
+### テーブルの確認
 
 ```zsh
 % docker exec -it <container_id> /bin/bash
@@ -174,11 +159,13 @@ Add commands to it by running `cobra add [cmdname]`.
 % cobra add server
 ```
 
+## [命名規則](./docs/naming.md)
+
 ## [設計](./docs/design.md)
 
 ## [ライブラリ類](./docs/libs.md)
 
-## [命名規則](./docs/naming.md)
+## [テスト](./docs/test.md)
 
 ## 参考
 
