@@ -5,7 +5,7 @@ Go 言語でクリーアーキテクチャを実現する構成を作ってみ�
 ## 実行
 
 ```zsh
-% docker-compose up --build -d
+% docker-compose -f deployments/docker-compose.yml up --build -d
 % curl localhost:8080/api/v1/hello
 Hello Go!
 % docker-compose down
@@ -160,6 +160,8 @@ Add commands to it by running `cobra add [cmdname]`.
 ## [命名規則](./docs/naming.md)
 
 ## [設計](./docs/design.md)
+
+## [gRPC](./docs/grpc.md)
 
 ## [ライブラリ類](./docs/libs.md)
 

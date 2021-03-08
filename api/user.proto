@@ -5,7 +5,7 @@ option go_package = "./user/v1";
 package user.v1;
 
 service UserService {
-    rpc ListUsers (UserRequest) returns (UserResponse) {}
+    rpc ListUsers (UserRequest) returns (UsersResponse) {}
     rpc GetUser (UserRequest) returns (UserResponse) {}
     rpc CreateUser (UserRequest) returns (UserResponse) {}
     rpc UpdateUsers (UserRequest) returns (UserResponse) {}
@@ -13,13 +13,17 @@ service UserService {
 }
 
 message UserRequest {
-    string ID        = 1;
+    int64 ID        = 1;
     string FirstName = 2;
     string LastName  = 3;
 }
 
 message UserResponse {
-    string ID        = 1;
+    int64 ID        = 1;
     string FirstName = 2;
     string LastName  = 3;
+}
+
+message UsersResponse {
+    repeated UserResponse Users = 1;
 }

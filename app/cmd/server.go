@@ -56,5 +56,8 @@ func runServer(cmd *cobra.Command, args []string) {
 	} else if t == "gin" {
 		srv := server.NewGinServer()
 		srv.Run()
+	} else if t == "grpc" {
+		srv := server.NewGrpcServer()
+		srv.Run()
 	}
 }
