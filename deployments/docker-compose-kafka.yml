@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:5.7.26
+    ports:
+      - "3306:3306"
+    container_name: mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=testdb
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testpass
+      - TZ=Asia/Tokyo
+    # command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # volumes:
+    #   - ./docker/development/db/data:/var/lib/mysql
+    #   - ./docker/development/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    #   - ./docker/development/db/sql:/docker-entrypoint-initdb.d
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 172.17.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  ca-app:
+    # image: ca-app:latest
+    build:
+      context: ../
+      dockerfile: ./build/package/Dockerfile-kafka-for-compose
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "mysql"
+    container_name: ca-app

@@ -24,6 +24,15 @@ Docker Compose で DB 込みで起動する。
 % docker-compose -f deployments/docker-compose-grpc.yml down
 ```
 
+### Kafka
+
+```zsh
+# 起動
+% docker-compose -f deployments/docker-compose-kafka.yml up --build -d
+# 停止
+% docker-compose -f deployments/docker-compose-kafka.yml down
+```
+
 ## 疎通
 
 ### Gin
@@ -124,6 +133,36 @@ user.v1.UserService@127.0.0.1:50051> exit
 Good Bye :)
 ```
 
+### Kafka
+
+```zsh
+# topic 作成
+% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic default_topic
+WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+Error while executing topic command : Topic 'default_topic' already exists.
+[2021-03-09 12:39:26,176] ERROR org.apache.kafka.common.errors.TopicExistsException: Topic 'default_topic' already exists.
+ (kafka.admin.TopicCommand$)
+
+# topic 一覧取得
+% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper:2181
+default_topic
+
+# message 送信
+% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic default_topic
+>message1
+>message2
+>^C
+
+# ログを見て message の受信を確認
+% docker logs <container_id>
+Waiting for mysql
+..........MySQL is up - executing command
+2021/03/09 21:35:38 consumer created
+2021/03/09 21:35:38 commence consuming
+2021/03/09 21:42:30 topic: default_topic, offset: 0, key: , value: message1
+2021/03/09 21:42:34 topic: default_topic, offset: 1, key: , value: message2
+```
+
 ### テーブルの確認
 
 ```zsh
@@ -216,6 +255,8 @@ Add commands to it by running `cobra add [cmdname]`.
 ## [設計](./docs/design.md)
 
 ## [gRPC](./docs/grpc.md)
+
+## [Kafka](./docs/kafka.md)
 
 ## [ライブラリ類](./docs/libs.md)
 

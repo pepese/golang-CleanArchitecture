@@ -1,6 +1,7 @@
 module github.com/pepese/golang-CleanArchitecture
 
 require (
+	github.com/Shopify/sarama v1.19.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.4.1
