@@ -30,9 +30,9 @@ func (us *userService) ListUsers(c context.Context, req *upb.UserRequest) (*upb.
 	}
 	result, err := us.userUc.List(c.Value("ctx").(context.Context), &m)
 	if err != nil {
-		return mapUsersResponse(result), nil
+		return nil, err
 	}
-	return nil, err
+	return mapUsersResponse(result), nil
 }
 
 func (us *userService) GetUser(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) {
@@ -43,9 +43,9 @@ func (us *userService) GetUser(c context.Context, req *upb.UserRequest) (*upb.Us
 	}
 	result, err := us.userUc.Get(c.Value("ctx").(context.Context), &m)
 	if err != nil {
-		return mapUserResponse(*result), nil
+		return nil, err
 	}
-	return nil, err
+	return mapUserResponse(*result), nil
 }
 
 func (us *userService) CreateUser(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) {
@@ -56,9 +56,9 @@ func (us *userService) CreateUser(c context.Context, req *upb.UserRequest) (*upb
 	}
 	result, err := us.userUc.Create(c.Value("ctx").(context.Context), &m)
 	if err != nil {
-		return mapUserResponse(*result), nil
+		return nil, err
 	}
-	return nil, err
+	return mapUserResponse(*result), nil
 }
 
 func (us *userService) UpdateUsers(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) {
@@ -69,9 +69,9 @@ func (us *userService) UpdateUsers(c context.Context, req *upb.UserRequest) (*up
 	}
 	result, err := us.userUc.Update(c.Value("ctx").(context.Context), &m)
 	if err != nil {
-		return mapUserResponse(*result), nil
+		return nil, err
 	}
-	return nil, err
+	return mapUserResponse(*result), nil
 }
 
 func (us *userService) DeleteUsers(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) {
@@ -82,9 +82,9 @@ func (us *userService) DeleteUsers(c context.Context, req *upb.UserRequest) (*up
 	}
 	result, err := us.userUc.Delete(c.Value("ctx").(context.Context), &m)
 	if err != nil {
-		return mapUserResponse(*result), nil
+		return nil, err
 	}
-	return nil, err
+	return mapUserResponse(*result), nil
 }
 
 func mapUsersResponse(m model.Users) *upb.UsersResponse {

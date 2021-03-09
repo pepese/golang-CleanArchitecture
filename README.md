@@ -4,40 +4,34 @@ Go 言語でクリーアーキテクチャを実現する構成を作ってみ�
 
 ## 実行
 
+Docker Compose で DB 込みで起動する。
+
+### Gin
+
 ```zsh
-% docker-compose -f deployments/docker-compose.yml up --build -d
-% curl localhost:8080/api/v1/hello
-Hello Go!
-% docker-compose down
+# 起動
+% docker-compose -f deployments/docker-compose-gin.yml up --build -d
+# 停止
+% docker-compose -f deployments/docker-compose-gin.yml down
 ```
 
->以下、動かないがメモ程度に。
->
->### アプリ単体
->
->```zsh
->% go version
->go version go1.15.6 darwin/amd64
->% go mod tidy
->% go build -o ca-app
->% ./app server # ./app server --type gin # ./app server -t gin
->% curl localhost:8080/api/v1/hello
->Hello Go!
->```
->
->### Docker単体
->
->```zsh
->% docker build -t ca-app .
->% docker run -d -p 8080:8080 --name ca-app ca-app
->% curl localhost:8080/api/v1/hello
->Hello Go!
->% docker container stop ca-app
->```
+### gRPC
+
+```zsh
+# 起動
+% docker-compose -f deployments/docker-compose-grpc.yml up --build -d
+# 停止
+% docker-compose -f deployments/docker-compose-grpc.yml down
+```
 
 ## 疎通
 
+### Gin
+
 ```zsh
+% curl localhost:8080/api/v1/hello
+Hello Go!
+
 % curl -X POST -H 'Content-Type:application/json' -d '{"first_name":"first","last_name":"last"}' localhost:8080/api/v1/users | jq .
 {
   "id": 1,
@@ -92,6 +86,42 @@ Hello Go!
 
 % curl localhost:8080/api/v1/users | jq .
 []
+```
+
+### gRPC
+
+```zsh
+% evans -p 8080 api/user.proto
+
+  ______
+ |  ____|
+ | |__    __   __   __ _   _ __    ___
+ |  __|   \ \ / /  / _. | | '_ \  / __|
+ | |____   \ V /  | (_| | | | | | \__ \
+ |______|   \_/    \__,_| |_| |_| |___/
+
+ more expressive universal gRPC client
+
+
+user.v1.UserService@127.0.0.1:50051> show service
++-------------+-------------+--------------+---------------+
+|   SERVICE   |     RPC     | REQUEST TYPE | RESPONSE TYPE |
++-------------+-------------+--------------+---------------+
+| UserService | ListUsers   | UserRequest  | UsersResponse |
+| UserService | GetUser     | UserRequest  | UserResponse  |
+| UserService | CreateUser  | UserRequest  | UserResponse  |
+| UserService | UpdateUsers | UserRequest  | UserResponse  |
+| UserService | DeleteUsers | UserRequest  | UserResponse  |
++-------------+-------------+--------------+---------------+
+
+user.v1.UserService@127.0.0.1:8080> call ListUsers
+ID (TYPE_INT64) => 
+FirstName (TYPE_STRING) => 
+LastName (TYPE_STRING) => 
+{}
+
+user.v1.UserService@127.0.0.1:50051> exit
+Good Bye :)
 ```
 
 ### テーブルの確認
@@ -156,6 +186,30 @@ Add commands to it by running `cobra add [cmdname]`.
 ```zsh
 % cobra add server
 ```
+
+>以下、 DB が無い場合動かないがメモ程度に。
+>
+>### アプリ単体
+>
+>```zsh
+>% go version
+>go version go1.15.6 darwin/amd64
+>% go mod tidy
+>% go build -o ca-app
+>% ./app server # ./app server --type gin # ./app server -t gin
+>% curl localhost:8080/api/v1/hello
+>Hello Go!
+>```
+>
+>### Docker単体
+>
+>```zsh
+>% docker build -t ca-app -f build/package/Dockerfile-gin .
+>% docker run -d -p 8080:8080 --name ca-app ca-app
+>% curl localhost:8080/api/v1/hello
+>Hello Go!
+>% docker container stop ca-app
+>```
 
 ## [命名規則](./docs/naming.md)
 
