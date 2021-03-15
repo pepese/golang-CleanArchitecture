@@ -137,30 +137,31 @@ Good Bye :)
 
 ```zsh
 # topic 作成
-% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic default_topic
-WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
-Error while executing topic command : Topic 'default_topic' already exists.
-[2021-03-09 12:39:26,176] ERROR org.apache.kafka.common.errors.TopicExistsException: Topic 'default_topic' already exists.
- (kafka.admin.TopicCommand$)
+% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic users
+Created topic users.
 
 # topic 一覧取得
 % docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-topics.sh --list --zookeeper zookeeper:2181
-default_topic
+users
 
 # message 送信
-% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic default_topic
+% docker-compose -f deployments/docker-compose-kafka.yml exec kafka /opt/kafka/bin/kafka-console-producer.sh --broker-list kafka:9092 --topic users
+>{"method":"create","message":{"first_name":"first","last_name":"last"}}
 >message1
->message2
 >^C
 
 # ログを見て message の受信を確認
 % docker logs <container_id>
 Waiting for mysql
-..........MySQL is up - executing command
-2021/03/09 21:35:38 consumer created
-2021/03/09 21:35:38 commence consuming
-2021/03/09 21:42:30 topic: default_topic, offset: 0, key: , value: message1
-2021/03/09 21:42:34 topic: default_topic, offset: 1, key: , value: message2
+............MySQL is up - executing command
+2021/03/15 16:30:10 consumer created
+2021/03/15 16:30:10 commence consuming
+2021/03/15 16:30:49 topic: users, offset: 0, key: , value: {"method":"create","message":{"first_name":"first","last_name":"last"}}, blockTime: 0001-01-01 00:00:00 +0000 UTC, Headers: [], partition: 0
+2021/03/15 16:30:49 kafkaRouter exec.
+2021/03/15 16:30:49 input: {create {0 first last 0001-01-01 00:00:00 +0000 UTC 0001-01-01 00:00:00 +0000 UTC <nil>}}
+2021/03/15 16:30:52 topic: users, offset: 1, key: , value: message1, blockTime: 0001-01-01 00:00:00 +0000 UTC, Headers: [], partition: 0
+2021/03/15 16:30:52 Kafka Users Topic Parse Error.
+2021/03/15 16:30:52 invalid character 'm' looking for beginning of value
 ```
 
 ### テーブルの確認

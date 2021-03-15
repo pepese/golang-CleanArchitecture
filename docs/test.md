@@ -20,6 +20,11 @@ v1.5.0
 以下で単体テストを実行。
 
 ```zsh
+# 一部のテスト
+# go test -run <テスト名>
+% go test -run TestKafkaRouterInput
+
+# 全テスト
 % go test ./...
 
 % go test -v -cover ./...
