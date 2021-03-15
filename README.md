@@ -156,12 +156,7 @@ Waiting for mysql
 ............MySQL is up - executing command
 2021/03/15 16:30:10 consumer created
 2021/03/15 16:30:10 commence consuming
-2021/03/15 16:30:49 topic: users, offset: 0, key: , value: {"method":"create","message":{"first_name":"first","last_name":"last"}}, blockTime: 0001-01-01 00:00:00 +0000 UTC, Headers: [], partition: 0
-2021/03/15 16:30:49 kafkaRouter exec.
-2021/03/15 16:30:49 input: {create {0 first last 0001-01-01 00:00:00 +0000 UTC 0001-01-01 00:00:00 +0000 UTC <nil>}}
-2021/03/15 16:30:52 topic: users, offset: 1, key: , value: message1, blockTime: 0001-01-01 00:00:00 +0000 UTC, Headers: [], partition: 0
-2021/03/15 16:30:52 Kafka Users Topic Parse Error.
-2021/03/15 16:30:52 invalid character 'm' looking for beginning of value
+# （省略）
 ```
 
 ### テーブルの確認

@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pepese/golang-CleanArchitecture/app"
 	"github.com/pepese/golang-CleanArchitecture/app/interface/controller"
 	upb "github.com/pepese/golang-CleanArchitecture/app/interface/controller/grpc_gen/user/v1"
-	"github.com/pepese/golang-gin-sample/app"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -52,7 +52,7 @@ func NewUnaryServierInterceptor() grpc.UnaryServerInterceptor {
 		reqId := uuid.NewV4().String()
 
 		// Logger
-		logger := app.GetLoggerWithKeyValue("reqId", reqId)
+		logger := app.LoggerWithKeyValue("reqId", reqId)
 		ctx = app.SetLoggerToContext(ctx, logger)
 		c = context.WithValue(c, "ctx", ctx)
 

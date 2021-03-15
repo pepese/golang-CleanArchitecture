@@ -40,7 +40,7 @@ func TestUsersAPI(t *testing.T) {
 		res := httptest.NewRecorder()
 		testRouter.ServeHTTP(res, req)
 		assert.Equal(t, 200, res.Code)
-		assert.Equal(t, "[]\n", getBodyString(res))
+		assert.Equal(t, "[]", getBodyString(res))
 	})
 
 	t.Run("Post user", func(t *testing.T) {

@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pepese/golang-CleanArchitecture/app"
 	"github.com/pepese/golang-CleanArchitecture/app/interface/controller"
-	"github.com/pepese/golang-gin-sample/app"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -73,7 +73,7 @@ func accessLogging() gin.HandlerFunc {
 		c.Writer.Header().Set("X-Request-Id", reqId)
 
 		// Logger
-		logger := app.GetLoggerWithKeyValue("reqId", reqId)
+		logger := app.LoggerWithKeyValue("reqId", reqId)
 		ctx = app.SetLoggerToContext(ctx, logger)
 		c.Set("ctx", ctx)
 
