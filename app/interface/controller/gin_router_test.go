@@ -17,18 +17,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-////////////////////////////////////////////////////////////////////////
-// TEST /api/v1/users
-////////////////////////////////////////////////////////////////////////
-
-func TestUsersAPI(t *testing.T) {
+func TestGinRouter(t *testing.T) {
 	// mock controller
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
+	// init settings
 	app.Config()
 
-	t.Run("Get empty users", func(t *testing.T) {
+	////////////////////////////////////////////////////////////////////////
+	// TEST /api/v1/users
+	////////////////////////////////////////////////////////////////////////
+	t.Run("[Users API] Get empty users", func(t *testing.T) {
 		// setting mock
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().List(gomock.Any(), gomock.Any()).Return(model.Users{}, nil)
@@ -43,7 +42,7 @@ func TestUsersAPI(t *testing.T) {
 		assert.Equal(t, "[]", getBodyString(res))
 	})
 
-	t.Run("Post user", func(t *testing.T) {
+	t.Run("[Users API] Post user", func(t *testing.T) {
 		// setting mock
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Create(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
@@ -62,7 +61,7 @@ func TestUsersAPI(t *testing.T) {
 		assert.Equal(t, res.Code, 200)
 	})
 
-	t.Run("Get user", func(t *testing.T) {
+	t.Run("[Users API] Get user", func(t *testing.T) {
 		// setting mock
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Get(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
@@ -76,7 +75,7 @@ func TestUsersAPI(t *testing.T) {
 		assert.Equal(t, res.Code, 200)
 	})
 
-	t.Run("Put user", func(t *testing.T) {
+	t.Run("[Users API] Put user", func(t *testing.T) {
 		// setting mock
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Update(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)
@@ -95,7 +94,7 @@ func TestUsersAPI(t *testing.T) {
 		assert.Equal(t, res.Code, 200)
 	})
 
-	t.Run("Create user", func(t *testing.T) {
+	t.Run("[Users API] Create user", func(t *testing.T) {
 		// setting mock
 		m := mock_usecase.NewMockUserUsecaser(ctrl)
 		m.EXPECT().Delete(gomock.Any(), gomock.Any()).Return(&model.User{}, nil)

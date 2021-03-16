@@ -59,17 +59,21 @@
 				
 				<option value="file1">github.com/pepese/golang-CleanArchitecture/app/interface/controller/gin_router.go (83.3%)</option>
 				
-				<option value="file2">github.com/pepese/golang-CleanArchitecture/app/interface/controller/http_router.go (0.0%)</option>
+				<option value="file2">github.com/pepese/golang-CleanArchitecture/app/interface/controller/grpc_router.go (27.3%)</option>
 				
-				<option value="file3">github.com/pepese/golang-CleanArchitecture/app/logger.go (85.0%)</option>
+				<option value="file3">github.com/pepese/golang-CleanArchitecture/app/interface/controller/http_router.go (0.0%)</option>
 				
-				<option value="file4">github.com/pepese/golang-CleanArchitecture/app/usecase/hello.go (0.0%)</option>
+				<option value="file4">github.com/pepese/golang-CleanArchitecture/app/interface/controller/kafka_router.go (73.7%)</option>
 				
-				<option value="file5">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_input.go (0.0%)</option>
+				<option value="file5">github.com/pepese/golang-CleanArchitecture/app/logger.go (85.0%)</option>
 				
-				<option value="file6">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_output.go (0.0%)</option>
+				<option value="file6">github.com/pepese/golang-CleanArchitecture/app/usecase/hello.go (0.0%)</option>
 				
-				<option value="file7">github.com/pepese/golang-CleanArchitecture/app/usecase/user.go (13.3%)</option>
+				<option value="file7">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_input.go (0.0%)</option>
+				
+				<option value="file8">github.com/pepese/golang-CleanArchitecture/app/usecase/hello_output.go (0.0%)</option>
+				
+				<option value="file9">github.com/pepese/golang-CleanArchitecture/app/usecase/user.go (13.3%)</option>
 				
 				</select>
 			</div>
@@ -92,14 +96,16 @@ import (
 )
 
 type config struct {
-        AppName     string `envconfig:"APP_NAME" default:"ca-app"`
-        AppVersion  string `envconfig:"APP_VERSION" default:"undefined"`
-        RdbType     string `envconfig:"RDB_TYPE" default:"mysql"`
-        RdbUser     string `envconfig:"RDB_USER" default:"testuser"`
-        RdbPassword string `envconfig:"RDB_PASSWORD" default:"testpass"`
-        RdbProtocol string `envconfig:"RDB_PROTOCOL" default:"tcp"`
-        RdbHost     string `envconfig:"RDB_HOST" default:"mysql:3306"`
-        RdbName     string `envconfig:"RDB_NAME" default:"testdb"`
+        AppName     string   `envconfig:"APP_NAME" default:"ca-app"`
+        AppVersion  string   `envconfig:"APP_VERSION" default:"undefined"`
+        RdbType     string   `envconfig:"RDB_TYPE" default:"mysql"`
+        RdbUser     string   `envconfig:"RDB_USER" default:"testuser"`
+        RdbPassword string   `envconfig:"RDB_PASSWORD" default:"testpass"`
+        RdbProtocol string   `envconfig:"RDB_PROTOCOL" default:"tcp"`
+        RdbHost     string   `envconfig:"RDB_HOST" default:"mysql:3306"`
+        RdbName     string   `envconfig:"RDB_NAME" default:"testdb"`
+        KafkaAddrs  []string `envconfig:"KAFKA_ADDRS" default:"kafka:9092"`
+        KafkaTopic  string   `envconfig:"KAFKA_TOPIC" default:"users"`
 }
 
 var (
@@ -246,6 +252,127 @@ func NewGinRouter(e *gin.Engine, userUc usecase.UserUsecaser) *ginRouter <span c
 		<pre class="file" id="file2" style="display: none">package controller
 
 import (
+        "context"
+        "reflect"
+
+        "github.com/pepese/golang-CleanArchitecture/app/domain/model"
+        upb "github.com/pepese/golang-CleanArchitecture/app/interface/controller/grpc_gen/user/v1"
+        db "github.com/pepese/golang-CleanArchitecture/app/interface/gateway"
+        "github.com/pepese/golang-CleanArchitecture/app/usecase"
+)
+
+type grpcRouter struct {
+        UsrServ userService
+}
+
+//////////////////
+// User UseCase
+//////////////////
+
+type userService struct {
+        userUc usecase.UserUsecaser
+}
+
+func (us *userService) ListUsers(c context.Context, req *upb.UserRequest) (*upb.UsersResponse, error) <span class="cov8" title="1">{
+        m := model.User{
+                ID:        int(req.ID),
+                FirstName: req.FirstName,
+                LastName:  req.LastName,
+        }
+        result, err := us.userUc.List(c.Value("ctx").(context.Context), &amp;m)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return mapUsersResponse(result), nil</span>
+}
+
+func (us *userService) GetUser(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) <span class="cov0" title="0">{
+        m := model.User{
+                ID:        int(req.ID),
+                FirstName: req.FirstName,
+                LastName:  req.LastName,
+        }
+        result, err := us.userUc.Get(c.Value("ctx").(context.Context), &amp;m)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return mapUserResponse(*result), nil</span>
+}
+
+func (us *userService) CreateUser(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) <span class="cov0" title="0">{
+        m := model.User{
+                ID:        int(req.ID),
+                FirstName: req.FirstName,
+                LastName:  req.LastName,
+        }
+        result, err := us.userUc.Create(c.Value("ctx").(context.Context), &amp;m)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return mapUserResponse(*result), nil</span>
+}
+
+func (us *userService) UpdateUsers(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) <span class="cov0" title="0">{
+        m := model.User{
+                ID:        int(req.ID),
+                FirstName: req.FirstName,
+                LastName:  req.LastName,
+        }
+        result, err := us.userUc.Update(c.Value("ctx").(context.Context), &amp;m)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return mapUserResponse(*result), nil</span>
+}
+
+func (us *userService) DeleteUsers(c context.Context, req *upb.UserRequest) (*upb.UserResponse, error) <span class="cov0" title="0">{
+        m := model.User{
+                ID:        int(req.ID),
+                FirstName: req.FirstName,
+                LastName:  req.LastName,
+        }
+        result, err := us.userUc.Delete(c.Value("ctx").(context.Context), &amp;m)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return mapUserResponse(*result), nil</span>
+}
+
+func mapUsersResponse(m model.Users) *upb.UsersResponse <span class="cov8" title="1">{
+        us := []*upb.UserResponse{}
+        for _, u := range ([]model.User)(m) </span><span class="cov0" title="0">{
+                us = append(us, mapUserResponse(u))
+        }</span>
+        <span class="cov8" title="1">return &amp;upb.UsersResponse{
+                Users: us,
+        }</span>
+}
+
+func mapUserResponse(m model.User) *upb.UserResponse <span class="cov0" title="0">{
+        return &amp;upb.UserResponse{
+                ID:        int64(m.ID),
+                FirstName: m.FirstName,
+                LastName:  m.LastName,
+        }
+}</span>
+
+func NewGrpcRouter(userUc usecase.UserUsecaser) *grpcRouter <span class="cov8" title="1">{
+        if (userUc == nil) || reflect.ValueOf(userUc).IsNil() </span><span class="cov0" title="0">{
+                userUc = &amp;usecase.UserUsecase{
+                        UserRepo: db.NewUserRepository(),
+                }
+        }</span>
+        <span class="cov8" title="1">return &amp;grpcRouter{
+                UsrServ: userService{
+                        userUc: userUc,
+                },
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package controller
+
+import (
         "fmt"
         "net/http"
 
@@ -281,7 +408,67 @@ func NewHttpRouter() *http.ServeMux <span class="cov0" title="0">{
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package app
+		<pre class="file" id="file4" style="display: none">package controller
+
+import (
+        "context"
+        "errors"
+        "log"
+        "reflect"
+
+        "github.com/pepese/golang-CleanArchitecture/app/domain/model"
+        db "github.com/pepese/golang-CleanArchitecture/app/interface/gateway"
+        "github.com/pepese/golang-CleanArchitecture/app/usecase"
+)
+
+type kafkaRouter struct {
+        userUc usecase.UserUsecaser
+}
+
+func (k *kafkaRouter) KafkaRouter(c context.Context, in UsersTopic) (*model.User, error) <span class="cov8" title="1">{
+        log.Println("kafkaRouter exec.")
+        log.Printf("input: %v\n", in)
+
+        //////////////////
+        // User UseCase
+        //////////////////
+        if (k.userUc == nil) || reflect.ValueOf(k.userUc).IsNil() </span><span class="cov0" title="0">{
+                k.userUc = &amp;usecase.UserUsecase{
+                        UserRepo: db.NewUserRepository(),
+                }
+        }</span>
+        <span class="cov8" title="1">switch in.Method </span>{
+        case "create":<span class="cov8" title="1">
+                result, err := k.userUc.Create(c.Value("ctx").(context.Context), &amp;in.Message)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return result, nil</span>
+        case "update":<span class="cov8" title="1">
+                result, err := k.userUc.Update(c.Value("ctx").(context.Context), &amp;in.Message)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return result, nil</span>
+        case "delete":<span class="cov8" title="1">
+                result, err := k.userUc.Delete(c.Value("ctx").(context.Context), &amp;in.Message)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">return result, nil</span>
+        default:<span class="cov0" title="0">
+                return nil, errors.New("no method to match: " + in.Method)</span>
+        }
+}
+
+func NewKafkaRouter(userUc usecase.UserUsecaser) *kafkaRouter <span class="cov8" title="1">{
+        return &amp;kafkaRouter{
+                userUc: userUc,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package app
 
 import (
         "context"
@@ -366,7 +553,7 @@ func LoggerWithKeyValue(key string, value string) *zap.SugaredLogger <span class
 }</span>
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package usecase
+		<pre class="file" id="file6" style="display: none">package usecase
 
 import (
         "github.com/pepese/golang-CleanArchitecture/app/domain"
@@ -414,7 +601,7 @@ func NewHelloUsecase(in *helloInput) *helloUsecase <span class="cov0" title="0">
 }</span>
 </pre>
 		
-		<pre class="file" id="file5" style="display: none">package usecase
+		<pre class="file" id="file7" style="display: none">package usecase
 
 type helloInput struct {
         name string
@@ -428,7 +615,7 @@ func NewHelloInput(name string) *helloInput <span class="cov0" title="0">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file6" style="display: none">package usecase
+		<pre class="file" id="file8" style="display: none">package usecase
 
 type HelloOutput struct {
         Reply string
@@ -442,7 +629,7 @@ func NewHelloOutput(reply string) *HelloOutput <span class="cov0" title="0">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file7" style="display: none">package usecase
+		<pre class="file" id="file9" style="display: none">package usecase
 
 import (
         "context"

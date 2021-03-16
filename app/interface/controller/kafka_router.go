@@ -51,6 +51,8 @@ func (k *kafkaRouter) KafkaRouter(c context.Context, in UsersTopic) (*model.User
 	}
 }
 
-func NewKafkaRouter() *kafkaRouter {
-	return &kafkaRouter{}
+func NewKafkaRouter(userUc usecase.UserUsecaser) *kafkaRouter {
+	return &kafkaRouter{
+		userUc: userUc,
+	}
 }

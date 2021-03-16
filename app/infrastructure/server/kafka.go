@@ -47,7 +47,7 @@ func (kc *kafkaConsumer) Run() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
 
-	router := controller.NewKafkaRouter()
+	router := controller.NewKafkaRouter(nil)
 
 	for {
 		select {

@@ -1,6 +1,11 @@
 # golang-CleanArchitecture
+![go version](https://img.shields.io/badge/Go-v1.15.6-blue)
+
+---
 
 Go 言語でクリーアーキテクチャを実現する構成を作ってみる。
+
+---
 
 ## 実行
 
@@ -257,6 +262,8 @@ Add commands to it by running `cobra add [cmdname]`.
 ## [ライブラリ類](./docs/libs.md)
 
 ## [テスト](./docs/test.md)
+
+## [バッジ](./docs/badge.md)
 
 ## 参考
 
