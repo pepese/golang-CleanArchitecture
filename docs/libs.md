@@ -1,8 +1,7 @@
 # ライブラリ類
 
 - Web Framework : [gin](https://github.com/gin-gonic/gin)
-- ORM : [gorm](https://github.com/jinzhu/gorm)
-    - mysql : `go get -u github.com/go-sql-driver/mysql`
+- ORM : [gorm](https://github.com/go-gorm/gorm)
 - Logger : [zap](https://github.com/uber-go/zap)
   - [gin と連携](https://github.com/gin-contrib/zap)
 - Env : [envconfig](https://github.com/kelseyhightower/envconfig) 、 [dotenv](https://github.com/joho/godotenv)

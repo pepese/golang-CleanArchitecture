@@ -1,5 +1,7 @@
 # 設計
 
+## モジュール分割
+
 <img src="./img/CleanArchitecture-Uncle-Bob.jpg" />
 <img src="./img/Flow-Of-Control.jpg" />
 
@@ -62,7 +64,7 @@
         └── hello.go
 ```
 
-## 参考
+### 参考
 
 - [CleanArchitectureでGolangらしいPackage構成を考える](https://qiita.com/inosy22/items/ce4a6ea7545c5cefd24b)
 - [Clean ArchitectureでAPI Serverを構築してみる](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e)

@@ -22,7 +22,6 @@ import (
 
 func main() {
 	app.Config()
-	db := datastore.Gorm()
-	defer db.Close()
+	datastore.Gorm()
 	cmd.Execute()
 }

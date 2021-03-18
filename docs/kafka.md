@@ -5,16 +5,17 @@
 |名前|役割|
 |:---|:---|
 |Kafka Cluster|Kafkaが実行されているサーバ(Broker)をグループ化したもの|
-|Broker|Kafkaの単一サーバ|
-|Zookeeper|Kafkaを管理するサーバ|
-|Producer|Kafkaへメッセージを送信するアプリケーション|
-|Consumer|Kafkaからメッセージを取得するアプリケーション|
-|Topic|メッセージを整理するためのカテゴリー|
-|Partition|Topic内のメッセージはパーティションという単位で分散させています|
-|Replica|各Partitionは複数のBrokerに複製(Replica)されています|
+|Broker|Kafkaの単一サーバ。|
+|Zookeeper|Kafkaを管理するサーバ。|
+|Producer|Kafkaへメッセージを送信するアプリケーション。|
+|Consumer|Kafkaからメッセージを取得するアプリケーション。|
+|Topic|メッセージを整理するためのカテゴリ。|
+|Partition|Topic内のメッセージはパーティションという単位で分散させている。|
+|Replica|各Partitionは複数のBrokerに複製(Replica)されている。|
 |Leader|複製されているReplicaのうち唯一読み書きが許可されているReplica|
-|Consumer Group|複数のConsumerを同一グループとして扱うためのもの。グループ化することで分散したConsumer間で同一メッセージを重複せずに読み込むことが可能です|
-|Offset|Partition単位でメッセージをどこまで読んだか管理するためのもの|
+|Consumer Group|複数のConsumerを同一グループとして扱うためのもの。グループ化することで分散したConsumer間で同一メッセージを重複せずに読み込むことが可能。|
+|Offset|Partition単位でメッセージをどこまで読んだか管理するためのもの。|
+|Key|データをKafkaのどのpartitionに対して書き込むかを決定する際に用いられる値。指定しない場合はラウンドロビン振り分け。|
 
 ## 全体像
 
@@ -25,6 +26,10 @@
 ## 設計
 
 今回はサーバサイドとして Consumer で待ち受けるアプリを作る。
+
+### ポイント
+
+
 
 ## 仕様メモ
 
