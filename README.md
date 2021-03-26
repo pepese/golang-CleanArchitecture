@@ -251,7 +251,7 @@ Add commands to it by running `cobra add [cmdname]`.
 >% docker container stop ca-app
 >```
 
-## [命名規則](./docs/naming.md)
+## [命名規則](https://tanakakns.github.io/go/naming/)
 
 ## [設計](./docs/design.md)
 
