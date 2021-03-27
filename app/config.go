@@ -32,6 +32,8 @@ func Config() *config {
 func initConfig() {
 	cOnce.Do(func() {
 		conf = &config{}
-		envconfig.Process("", conf)
+		if err := envconfig.Process("", conf); err != nil {
+			panic("envconfig error")
+		}
 	})
 }
